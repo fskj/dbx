@@ -83,11 +83,11 @@ class ExecutionController:
 
     def preprocess_task_parameters(self, parameters: List[str]):
         dbx_echo(f"Processing task parameters: {parameters}")
+        if parameters:
+            def adjustment_callback(p: Any):
+                return adjust_path(p, self._file_uploader)
 
-        def adjustment_callback(p: Any):
-            return adjust_path(p, self._file_uploader)
+            walk_content(adjustment_callback, parameters)
 
-        walk_content(adjustment_callback, parameters)
-
-        self._client.setup_arguments(parameters)
+            self._client.setup_arguments(parameters)
         dbx_echo("Processing task parameters - done")
